@@ -1,0 +1,30 @@
+{
+  "name": "babel-plugin-wrap-profiler",
+  "version": "1.0.0",
+  "description": "Babel Plugin to wrap components with profiler",
+  "main": "src/index.js",
+  "scripts": {
+    "prebuild": "rm -rf lib/",
+    "build": "babel -d lib --ignore \"**/*.test.js\" src",
+    "prepublishOnly": "yarn run build",
+    "test": "jest"
+  },
+  "keywords": [
+    "babel",
+    "react",
+    "profiler"
+  ],
+  "author": "Subramanya Chakravarthy",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
+    "@babel/generator": "^7.15.8",
+    "@babel/parser": "^7.15.8",
+    "@babel/plugin-syntax-jsx": "^7.14.5",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/preset-react": "^7.14.5",
+    "@babel/types": "^7.15.6",
+    "jest": "^27.2.5"
+  }
+}
