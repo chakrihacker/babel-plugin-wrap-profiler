@@ -164,9 +164,12 @@ export default function ({ types: t }) {
               // function component name
               let componentName = getComponentName(scope)
               // wrap top level react component with profiler
-              const newNode = wrapWithProfiler(path, componentName)
+              // const newNode = wrapWithProfiler(path, componentName)
+              const Profiler = 'Profiler'
               const newNodeAst = parse(`
-                ${generate(newNode).code}
+                <${Profiler} id="${componentName}" onRender={onRenderCallBack$}>
+                  ${generate(path.node).code}
+                </${Profiler}>
               `, {
                 sourceType: "module",
                 plugins: ["jsx"]

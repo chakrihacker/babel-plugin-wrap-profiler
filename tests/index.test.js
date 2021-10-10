@@ -22,9 +22,11 @@ describe("babel-plugin-wrap-profiler", () => {
       var _react = require("react");
 
       var User = function User(props) {
-        return <_react.Profiler id="User" onRender={_profilerUtils.onRenderCallBack$}><View>
+        return <_react.Profiler id="User" onRender={_profilerUtils.onRenderCallBack$}>
+                        <View>
                   /*#__PURE__*/React.createElement(Text, null, "Hello")
-                </View></_react.Profiler>;
+                </View>
+                      </_react.Profiler>;
       };
     `
 
@@ -54,9 +56,11 @@ describe("babel-plugin-wrap-profiler", () => {
       function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
       var User = function User(props) {
-        return <Profiler id="User" onRender={_profilerUtils.onRenderCallBack$}><View>
+        return <Profiler id="User" onRender={_profilerUtils.onRenderCallBack$}>
+                        <View>
                   /*#__PURE__*/React.createElement(Text, null, "Hello")
-                </View></Profiler>;
+                </View>
+                      </Profiler>;
       };
     `
 
