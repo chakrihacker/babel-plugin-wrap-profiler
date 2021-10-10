@@ -144,17 +144,27 @@ export default function ({ types: t }) {
       },
       JSXElement: {
         exit(path, state) {
-          const { parent, scope } = path
-          const topLevelReactComponent = parent.type === "ReturnStatement"
-          if (topLevelReactComponent) {
-            // function component name
-            let componentName = getComponentName(scope)
-            // wrap top level react component with profiler
-            const newNode = wrapWithProfiler(path, componentName)
-            path.replaceWith(
-              newNode
+          if(this.file.opts.filename) {
+            const includeNodeModules = Boolean(
+              state.opts && state.opts.includeNodeModules
             )
-            path.skip()
+
+            // ignore node modules if includeNodeModules opt not specified as true
+            if (this.file.opts.filename.match(/node_modules/) !== null && !includeNodeModules) {
+              return
+            }
+            const { parent, scope } = path
+            const topLevelReactComponent = parent.type === "ReturnStatement"
+            if (topLevelReactComponent) {
+              // function component name
+              let componentName = getComponentName(scope)
+              // wrap top level react component with profiler
+              const newNode = wrapWithProfiler(path, componentName)
+              path.replaceWith(
+                newNode
+              )
+              path.skip()
+            }
           }
         }
       }

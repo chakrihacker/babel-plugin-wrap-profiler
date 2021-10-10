@@ -2,7 +2,7 @@
   "name": "babel-plugin-wrap-profiler",
   "version": "1.0.0",
   "description": "Babel Plugin to wrap components with profiler",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "prebuild": "rm -rf lib/",
     "build": "babel -d lib --ignore \"**/*.test.js\" src",
