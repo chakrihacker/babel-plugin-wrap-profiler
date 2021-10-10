@@ -1,3 +1,5 @@
+let isProfilerImported = false;
+
 const handleProfilerImport = (t, path) => {
   let profilerFound = false
   let reactImportIdx = null
@@ -28,7 +30,8 @@ const handleProfilerImport = (t, path) => {
 
     // TODO: Add code for variableDeclaration require
 
-    if (!profilerFound) {
+    if (!profilerFound && !isProfilerImported) {
+      isProfilerImported = true;
       // react import found
       if (reactImportIdx !== null) {
         path.node.body[reactImportIdx].specifiers.push(
