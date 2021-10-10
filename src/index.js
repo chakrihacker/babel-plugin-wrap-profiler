@@ -1,3 +1,6 @@
+import generate from "@babel/generator";
+import { parse } from "@babel/parser";
+
 let isProfilerImported = false;
 
 const handleProfilerImport = (t, path) => {
@@ -162,8 +165,14 @@ export default function ({ types: t }) {
               let componentName = getComponentName(scope)
               // wrap top level react component with profiler
               const newNode = wrapWithProfiler(path, componentName)
+              const newNodeAst = parse(`
+                ${generate(newNode).code}
+              `, {
+                sourceType: "module",
+                plugins: ["jsx"]
+              }).program.body[0].expression
               path.replaceWith(
-                newNode
+                newNodeAst
               )
               path.skip()
             }

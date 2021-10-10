@@ -55,7 +55,7 @@ describe("babel-plugin-wrap-profiler", () => {
 
       var User = function User(props) {
         return <Profiler id="User" onRender={_profilerUtils.onRenderCallBack$}><View>
-                  /*#__PURE__*/_react["default"].createElement(Text, null, "Hello")
+                  /*#__PURE__*/React.createElement(Text, null, "Hello")
                 </View></Profiler>;
       };
     `
