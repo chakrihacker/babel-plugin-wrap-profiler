@@ -65,6 +65,8 @@ export default function ({ types: t }) {
     let componentName = null
     if (scope.path.type === "ClassMethod") {
       componentName = scope.path.parentPath.parent.id.name;
+    } else if(scope.path.type === "FunctionDeclaration") {
+      componentName = scope.path.container.declaration.id.name
     } else {
       componentName = scope.path.container.id.name;
     }
