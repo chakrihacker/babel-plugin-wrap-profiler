@@ -61,11 +61,31 @@ const handleProfilerImport = (t, path) => {
 }
 
 export default function ({ types: t }) {
-  const wrapWithProfiler = (jsx) => {
+  const getComponentName = (scope) => {
+    let componentName = null
+    if (scope.path.type === "ClassMethod") {
+      componentName = scope.path.parentPath.parent.id.name;
+    } else {
+      componentName = scope.path.container.id.name;
+    }
+    return componentName
+  }
+  const wrapWithProfiler = (jsx, componentName) => {
     return t.JSXElement(
       t.JSXOpeningElement(
         t.JSXIdentifier('Profiler'),
-        []
+        [
+          t.JSXAttribute(
+            t.JSXIdentifier('id'),
+            t.stringLiteral(componentName)
+          ),
+          t.JSXAttribute(
+            t.JSXIdentifier('onRender'),
+            t.JSXExpressionContainer(
+              t.Identifier('onRenderCallBack$')
+            )
+          )
+        ]
       ),
       t.JSXClosingElement(
         t.JSXIdentifier('Profiler')
@@ -106,6 +126,15 @@ export default function ({ types: t }) {
             }
 
             const profilerImport = handleProfilerImport(t, path)
+            path.unshiftContainer('body', t.importDeclaration(
+              [
+                t.importSpecifier(
+                  t.identifier('onRenderCallBack$'),
+                  t.identifier('onRenderCallBack$')
+                )
+              ],
+              t.stringLiteral('babel-plugin-wrap-profiler/src/profiler-utils')
+            ))
           }
         }
       },
@@ -115,15 +144,13 @@ export default function ({ types: t }) {
       },
       JSXElement: {
         exit(path, state) {
-          const {container, parent, node } = path
+          const { parent, scope } = path
           const topLevelReactComponent = parent.type === "ReturnStatement"
           if (topLevelReactComponent) {
+            // function component name
+            let componentName = getComponentName(scope)
             // wrap top level react component with profiler
-            // path.replaceWithSourceString(
-            //   JSON.stringify(wrapWithProfiler(path))
-            // )
-            const newNode = wrapWithProfiler(path)
-            console.log(t.isJSXElement(newNode));
+            const newNode = wrapWithProfiler(path, componentName)
             path.replaceWith(
               newNode
             )

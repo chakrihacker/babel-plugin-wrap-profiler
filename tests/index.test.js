@@ -17,10 +17,12 @@ describe("babel-plugin-wrap-profiler", () => {
     const output = `
       "use strict";
 
+      var _profilerUtils = require("babel-plugin-wrap-profiler/src/profiler-utils");
+
       var _react = require("react");
 
       var User = function User(props) {
-        return <_react.Profiler><View>
+        return <_react.Profiler id="User" onRender={_profilerUtils.onRenderCallBack$}><View>
                   /*#__PURE__*/React.createElement(Text, null, "Hello")
                 </View></_react.Profiler>;
       };
@@ -45,18 +47,16 @@ describe("babel-plugin-wrap-profiler", () => {
     const output = `
       "use strict";
 
-      function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+      var _profilerUtils = require("babel-plugin-wrap-profiler/src/profiler-utils");
 
-      var _react = _interopRequireWildcard(require("react"));
+      var _react = _interopRequireDefault(require("react"));
 
-      function _getRequireWildcardCache(nodeInterop) { if (typeof WeakMap !== "function") return null; var cacheBabelInterop = new WeakMap(); var cacheNodeInterop = new WeakMap(); return (_getRequireWildcardCache = function _getRequireWildcardCache(nodeInterop) { return nodeInterop ? cacheNodeInterop : cacheBabelInterop; })(nodeInterop); }
-
-      function _interopRequireWildcard(obj, nodeInterop) { if (!nodeInterop && obj && obj.__esModule) { return obj; } if (obj === null || _typeof(obj) !== "object" && typeof obj !== "function") { return { "default": obj }; } var cache = _getRequireWildcardCache(nodeInterop); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (key !== "default" && Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj["default"] = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+      function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
       var User = function User(props) {
-        return <_react.Profiler><View>
+        return <Profiler id="User" onRender={_profilerUtils.onRenderCallBack$}><View>
                   /*#__PURE__*/_react["default"].createElement(Text, null, "Hello")
-                </View></_react.Profiler>;
+                </View></Profiler>;
       };
     `
 
