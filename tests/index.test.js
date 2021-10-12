@@ -22,11 +22,10 @@ describe("babel-plugin-wrap-profiler", () => {
       var _react = require("react");
 
       var User = function User(props) {
-        return <_react.Profiler id="User" onRender={_profilerUtils.onRenderCallBack$}>
-                        <View>
-                  /*#__PURE__*/React.createElement(Text, null, "Hello")
-                </View>
-                      </_react.Profiler>;
+        return React.createElement(_react.Profiler, {
+          id: "User",
+          onRender: _profilerUtils.onRenderCallBack$
+        }, /*#__PURE__*/React.createElement(View, null, /*#__PURE__*/React.createElement(Text, null, "Hello")));
       };
     `
 
@@ -56,11 +55,10 @@ describe("babel-plugin-wrap-profiler", () => {
       function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
       var User = function User(props) {
-        return <Profiler id="User" onRender={_profilerUtils.onRenderCallBack$}>
-                        <View>
-                  /*#__PURE__*/React.createElement(Text, null, "Hello")
-                </View>
-                      </Profiler>;
+        return /*#__PURE__*/_react["default"].createElement(Profiler, {
+          id: "User",
+          onRender: _profilerUtils.onRenderCallBack$
+        }, /*#__PURE__*/_react["default"].createElement(View, null, /*#__PURE__*/_react["default"].createElement(Text, null, "Hello")));
       };
     `
 
@@ -71,7 +69,7 @@ describe("babel-plugin-wrap-profiler", () => {
 
 const transform = (code) => {
   return babel.transformSync(code, {
-    plugins: [profilerPlugin, jsxPlugin],
+    plugins: [profilerPlugin],
     filename: "src/index.js",
     code: true,
     ast: false,

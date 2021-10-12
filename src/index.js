@@ -1,5 +1,4 @@
-import generate from "@babel/generator";
-import { parse } from "@babel/parser";
+import syntaxJsx from '@babel/plugin-syntax-jsx'
 
 let isProfilerImported = false;
 
@@ -63,9 +62,9 @@ const handleProfilerImport = (t, path) => {
   return profilerImportName
 }
 
-export default function ({ types: t }) {
+export default function ({ types: t, template }) {
   const getComponentName = (scope) => {
-    let componentName = null
+    let componentName = ''
     if (scope.path.type === "ClassMethod") {
       componentName = scope.path.parentPath.parent.id.name;
     } else if(scope.path.type === "FunctionDeclaration") {
@@ -76,32 +75,21 @@ export default function ({ types: t }) {
     return componentName
   }
   const wrapWithProfiler = (jsx, componentName) => {
-    return t.JSXElement(
-      t.JSXOpeningElement(
-        t.JSXIdentifier('Profiler'),
-        [
-          t.JSXAttribute(
-            t.JSXIdentifier('id'),
-            t.stringLiteral(componentName)
-          ),
-          t.JSXAttribute(
-            t.JSXIdentifier('onRender'),
-            t.JSXExpressionContainer(
-              t.Identifier('onRenderCallBack$')
-            )
-          )
-        ]
-      ),
-      t.JSXClosingElement(
-        t.JSXIdentifier('Profiler')
-      ),
-      [
-        jsx.node
-      ]
-    )
+    const Profiler = 'Profiler'
+    return template.ast`
+      React.createElement(
+        ${Profiler},
+        {
+          id: '${componentName}',
+          onRender: onRenderCallBack$
+        },
+        ${jsx.node}
+      )
+    `
   }
 
   return {
+    inherits: syntaxJsx,
     visitor: {
       Program: {
         enter(path, state) {
@@ -143,12 +131,9 @@ export default function ({ types: t }) {
           }
         }
       },
-      VariableDeclaration: {
-        exit(path, state) {
-        }
-      },
       JSXElement: {
-        exit(path, state) {
+        enter(path, state) {
+          // TODO: move node_modules check logic to pre
           if(this.file.opts.filename) {
             const includeNodeModules = Boolean(
               state.opts && state.opts.includeNodeModules
@@ -164,20 +149,8 @@ export default function ({ types: t }) {
               // function component name
               let componentName = getComponentName(scope)
               // wrap top level react component with profiler
-              // const newNode = wrapWithProfiler(path, componentName)
-              const Profiler = 'Profiler'
-              const newNodeAst = parse(`
-                <${Profiler} id="${componentName}" onRender={onRenderCallBack$}>
-                  ${generate(path.node).code}
-                </${Profiler}>
-              `, {
-                sourceType: "module",
-                plugins: ["jsx"]
-              }).program.body[0].expression
-              path.replaceWith(
-                newNodeAst
-              )
-              path.skip()
+              const newNodeAst = wrapWithProfiler(path, componentName)
+              path.replaceWith(newNodeAst)
             }
           }
         }
