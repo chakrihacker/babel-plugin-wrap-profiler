@@ -29,16 +29,10 @@ export function getComponentsByTotalDuration() {
 
 export function logComponents(type) {
   if (type === 'render') {
-    getComponentsByRenderCount().forEach((value, key) => {
-      console.log(`${key} ${value.count} ${value.actualDuration}`);
-    })
+    console.table(getComponentsByRenderCount());
   } else if(type === 'duration') {
-    getComponentsByTotalDuration().forEach((value, key) => {
-      console.log(`${key} ${value.count} ${value.actualDuration}`);
-    })
+    console.table(getComponentsByTotalDuration());
   } else {
-    components.forEach((value, key) => {
-      console.log(`${key} ${value.count} ${value.actualDuration}`);
-    })
+    console.table(Object.fromEntries(components));
   }
 }

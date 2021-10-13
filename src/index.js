@@ -126,7 +126,7 @@ export default function ({ types: t, template }) {
                   t.identifier('onRenderCallBack$')
                 )
               ],
-              t.stringLiteral('babel-plugin-wrap-profiler/src/profiler-utils')
+              t.stringLiteral('babel-plugin-wrap-profiler/lib/profiler-utils')
             ))
           }
         }

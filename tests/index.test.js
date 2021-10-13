@@ -17,7 +17,7 @@ describe("babel-plugin-wrap-profiler", () => {
     const output = `
       "use strict";
 
-      var _profilerUtils = require("babel-plugin-wrap-profiler/src/profiler-utils");
+      var _profilerUtils = require("babel-plugin-wrap-profiler/lib/profiler-utils");
 
       var _react = require("react");
 
@@ -48,7 +48,7 @@ describe("babel-plugin-wrap-profiler", () => {
     const output = `
       "use strict";
 
-      var _profilerUtils = require("babel-plugin-wrap-profiler/src/profiler-utils");
+      var _profilerUtils = require("babel-plugin-wrap-profiler/lib/profiler-utils");
 
       var _react = _interopRequireDefault(require("react"));
 
