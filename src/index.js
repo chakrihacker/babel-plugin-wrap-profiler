@@ -1,7 +1,3 @@
-import syntaxJsx from '@babel/plugin-syntax-jsx'
-
-let isProfilerImported = false;
-
 const handleProfilerImport = (t, path) => {
   let profilerFound = false
   let reactImportIdx = null
@@ -32,8 +28,7 @@ const handleProfilerImport = (t, path) => {
 
     // TODO: Add code for variableDeclaration require
 
-    if (!profilerFound && !isProfilerImported) {
-      isProfilerImported = true;
+    if (!profilerFound) {
       // react import found
       if (reactImportIdx !== null) {
         path.node.body[reactImportIdx].specifiers.push(
@@ -89,7 +84,6 @@ export default function ({ types: t, template }) {
   }
 
   return {
-    inherits: syntaxJsx,
     visitor: {
       Program: {
         enter(path, state) {
