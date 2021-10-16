@@ -60,15 +60,27 @@ const handleProfilerImport = (t, path) => {
 export default function ({ types: t, template }) {
   const getComponentName = (scope) => {
     let componentName = ''
-    if (scope.path.type === "ClassMethod") {
-      componentName = scope.path.parentPath.parent.id.name;
-    } else if(scope.path.type === "FunctionDeclaration") {
-      componentName = scope.path.container.declaration.id.name
-    } else {
-      componentName = scope.path.container.id.name;
+    switch (scope.path.type) {
+      case "ClassMethod":
+        componentName = scope.path.parentPath.parent.id.name;
+        break;
+      case "FunctionDeclaration":
+        componentName = scope.path.container.declaration.id.name
+        break;
+      case "FunctionExpression":
+        scope.path.parentPath.parentPath.parentPath.parent.arguments.forEach(arg => {
+          if (arg.type === "Identifier") {
+            componentName = arg.name
+          }
+        })
+        break;
+      default:
+        componentName = scope.path.container.id.name;
+        break;
     }
     return componentName
   }
+
   const wrapWithProfiler = (jsx, componentName) => {
     const Profiler = 'Profiler'
     return template.ast`
