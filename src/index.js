@@ -40,7 +40,7 @@ const handleProfilerImport = (t, path) => {
       } else {
         // create es6 import
         path.node.body.unshift(
-          t.ImportDeclaration(
+          t.importDeclaration(
             [
               t.importSpecifier(
                 t.identifier('Profiler'),
